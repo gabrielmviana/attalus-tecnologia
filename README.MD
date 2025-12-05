@@ -1,4 +1,4 @@
-# 🚀 ATTALUS Tecnologia — Home Lab Corporativo
+#ATTALUS Tecnologia — Home Lab Corporativo
 
 ![ATTALUS Logo](assets/logos/attalus.png)
 
