@@ -1,66 +1,76 @@
-# 03 — Configurações da Infraestrutura
+# 03 --- Configurações da Infraestrutura Attalus
 
-Este documento reúne as configurações básicas e avançadas do ambiente ATTALUS Tecnologia.
+Este documento reúne as configurações **planejadas e implementadas** da
+infraestrutura do ambiente **ATTALUS Tecnologia**, cobrindo desde o
+roteador MikroTik até o futuro servidor e automações do homelab.
 
----
+------------------------------------------------------------------------
 
-## 🔧 Configuração do Mikrotik (Inicial)
+## 🔧 Configuração do MikroTik --- Planejamento Inicial
 
-### Ações previstas:
+### Ações previstas
 
-- Reset seguro
-- Configuração de WAN
-- Criação da LAN
-- Firewall básico
-- Criar VLANs
-- Criar DHCP Server
-- Criar Address Lists
-- Permitir gerenciamento apenas via rede Management
-- Aplicar hardening
+-   Reset seguro\
+-   Configuração de WAN\
+-   Criação da LAN\
+-   Firewall básico\
+-   Criar VLANs\
+-   Criar DHCP Server\
+-   Criar Address Lists\
+-   Permitir gerenciamento apenas via rede Management\
+-   Aplicar hardening
 
-Um backup `.rsc` será mantido na pasta: infra/mikrotik/backups/
+### Backups
 
+Um backup `.rsc` será mantido na pasta:
 
----
+-   `infra/mikrotik/backups/`
 
-## 🔧 Configuração do Servidor
+Padrão sugerido de nomenclatura:
 
-A depender do sistema escolhido (Windows Server ou Linux):
+    mikrotik-attalus-YYYY-MM-DD.rsc
 
-### Possíveis serviços:
+------------------------------------------------------------------------
 
-- Active Directory / Samba AD
-- DNS interno
-- DHCP alternativo
-- File Server
-- Web Server para testes
-- NTP
+## 🔧 Configuração do Servidor (Planejamento)
 
----
+A depender do sistema escolhido (Windows Server ou Linux), estão
+previstos os seguintes serviços:
 
-## 🔧 Configurações do Homelab
+### Possíveis serviços
 
-Serão documentadas aqui:
+-   Active Directory / Samba AD\
+-   DNS interno\
+-   DHCP alternativo\
+-   File Server\
+-   Web Server para testes\
+-   NTP
 
-- Nome dos hosts
-- Recursos alocados para cada VM
-- Padrões de snapshot
-- Rede interna do VirtualBox
+------------------------------------------------------------------------
 
----
+## 🔧 Configurações do Homelab (Planejamento)
+
+Serão documentadas nesta seção em etapas futuras:
+
+-   Nome dos hosts\
+-   Recursos alocados para cada VM\
+-   Padrões de snapshot\
+-   Rede interna do VirtualBox
+
+------------------------------------------------------------------------
 
 ## 🔧 Scripts e Automação
 
 Scripts serão armazenados em:
 
-projetos/automacoes/
-infra/mikrotik/scripts/
+-   `projetos/automacoes/`\
+-   `infra/mikrotik/scripts/`
 
----
+------------------------------------------------------------------------
 
-## 3.1 --- Configuração Base do Mikrotik (Etapa 1 --- Cenário A)
+# 3.1 --- Configuração Base do MikroTik (Etapa 1 --- Cenário A)
 
-**Data:** *\[19/01/2026\]*\
+**Data:** 19/01/2026\
 **Equipamento:** MikroTik RB750Gr3\
 **Contexto do cenário:** Cenário A --- o roteador do provedor controla a
 rede doméstica, enquanto o MikroTik gerencia exclusivamente a rede
@@ -68,7 +78,7 @@ isolada do Projeto Attalus.
 
 ------------------------------------------------------------------------
 
-###  Objetivo desta etapa
+## 🎯 Objetivo desta etapa
 
 Estabelecer a base de conectividade do Projeto **ATTALUS**, criando uma
 rede isolada para laboratório de redes e infraestrutura, mantendo a rede
@@ -76,7 +86,7 @@ doméstica intacta e funcional.
 
 ------------------------------------------------------------------------
 
-##  Topologia Física
+## 🧱 Topologia Física
 
 -   **Roteador do provedor (rede doméstica)**
     -   Faixa: `192.168.0.0/24`
@@ -88,7 +98,7 @@ doméstica intacta e funcional.
 
 ------------------------------------------------------------------------
 
-##  Topologia Lógica
+## 🌐 Topologia Lógica
 
   Rede            Faixa              Gateway
   --------------- ------------------ -------------------------
@@ -117,12 +127,13 @@ doméstica intacta e funcional.
 
 ### 3) Conexão com a internet (DHCP Client)
 
--   Caminho: **IP → DHCP Client**
+-   Caminho: **IP → DHCP Client**\
 -   Interface configurada: **WAN**
--   Resultado:
-    -   O MikroTik recebeu IP automaticamente do roteador doméstico:\
-    -   Exemplo obtido: `192.168.0.101`\
-    -   Status: **bound**
+
+**Resultado:** - O MikroTik recebeu IP automaticamente do roteador
+doméstico\
+- Exemplo obtido: `192.168.0.101`\
+- Status: **bound**
 
 ------------------------------------------------------------------------
 
@@ -136,18 +147,18 @@ doméstica intacta e funcional.
     Address:   10.10.10.1/24  
     Interface: ATTALUS-LAN
 
-Isso definiu: - Rede Attalus: `10.10.10.0/24` - Gateway do laboratório:
-`10.10.10.1`
+Isso definiu: - Rede Attalus: `10.10.10.0/24`\
+- Gateway do laboratório: `10.10.10.1`
 
 ------------------------------------------------------------------------
 
 ### 5) Configuração do servidor DHCP para Attalus
 
--   Caminho: **IP → DHCP Server → DHCP Setup**
+-   Caminho: **IP → DHCP Server → DHCP Setup**\
 -   Interface escolhida: **ATTALUS-LAN**
--   Resultado:
-    -   Dispositivos conectados ao MikroTik passaram a receber IPs
-        automaticamente na faixa `10.10.10.x`.
+
+**Resultado:** - Dispositivos conectados ao MikroTik passaram a receber
+IPs automaticamente na faixa `10.10.10.x`.
 
 ------------------------------------------------------------------------
 
@@ -170,21 +181,21 @@ Isso definiu: - Rede Attalus: `10.10.10.0/24` - Gateway do laboratório:
 
 Após as configurações:
 
--   Notebook conectado à `ATTALUS-LAN` recebeu IP:
-    -   Exemplo: `10.10.10.254`
--   Gateway identificado corretamente como `10.10.10.1`
--   Acesso à internet funcionando através do MikroTik.
--   Rede do laboratório isolada logicamente da rede doméstica.
+-   Notebook conectado à `ATTALUS-LAN` recebeu IP: `10.10.10.254`
+    (exemplo)\
+-   Gateway identificado corretamente como `10.10.10.1`\
+-   Acesso à internet funcionando através do MikroTik\
+-   Rede do laboratório isolada logicamente da rede doméstica
 
 ------------------------------------------------------------------------
 
 ## 🛡️ Observações de Segurança (boas práticas)
 
--   Nenhum IP público ou credencial foi registrado.
+-   Nenhum IP público ou credencial foi registrado\
 -   Apenas endereços privados e genéricos foram documentados
-    (`10.0.0.0/8` e `192.168.0.0/16`).
+    (`10.0.0.0/8` e `192.168.0.0/16`)\
 -   Essa documentação é segura para publicação em repositório público e
-    para uso em portfólio profissional.
+    para uso em portfólio profissional
 
 ------------------------------------------------------------------------
 
@@ -192,6 +203,8 @@ Após as configurações:
 
 **Etapa 2 --- Segmentação por VLANs no MikroTik**
 
-Planejamento preliminar: - VLAN 10 --- Administração\
-- VLAN 20 --- Servidores\
-- VLAN 30 --- Laboratório/Testes
+Planejamento preliminar:
+
+-   VLAN 10 --- Administração\
+-   VLAN 20 --- Servidores\
+-   VLAN 30 --- Laboratório/Testes
