@@ -111,13 +111,13 @@ Estabelecer a base de conectividade do Projeto **ATTALUS**, criando uma rede iso
 
 ##  Configurações realizadas no MikroTik
 
-### 1) Reset inicial do equipamento
+### 3.1.1) Reset inicial do equipamento
 
 * Reset de fábrica sem configuração padrão (`No Default Configuration`)
 
 ---
 
-### 2) Padronização de nomes das interfaces
+### 3.1.2) Padronização de nomes das interfaces
 
 | Interface original | Novo nome   | Função                       |
 | ------------------ | ----------- | ---------------------------- |
@@ -126,7 +126,7 @@ Estabelecer a base de conectividade do Projeto **ATTALUS**, criando uma rede iso
 
 ---
 
-### 3) Conexão com a internet (DHCP Client)
+### 3.1.3) Conexão com a internet (DHCP Client)
 
 * Caminho: **IP → DHCP Client**
 * Interface: **WAN**
@@ -138,7 +138,7 @@ Estabelecer a base de conectividade do Projeto **ATTALUS**, criando uma rede iso
 
 ---
 
-### 4) Criação da rede do laboratório Attalus
+### 3.1.4) Criação da rede do laboratório Attalus
 
 * Caminho: **IP → Addresses → +**
 
@@ -152,7 +152,7 @@ Estabelecer a base de conectividade do Projeto **ATTALUS**, criando uma rede iso
 
 ---
 
-### 5) Configuração do DHCP Server
+### 3.1.5) Configuração do DHCP Server
 
 * Caminho: **IP → DHCP Server → DHCP Setup**
 * Interface: **ATTALUS-LAN**
@@ -163,7 +163,7 @@ Estabelecer a base de conectividade do Projeto **ATTALUS**, criando uma rede iso
 
 ---
 
-### 6) Regra de NAT
+### 3.1.6) Regra de NAT
 
 * Caminho: **IP → Firewall → NAT**
 
@@ -208,12 +208,20 @@ Estabelecer a base de conectividade do Projeto **ATTALUS**, criando uma rede iso
 
 ---
 
+##  Objetivo desta etapa
+
+Implementar segmentação lógica da rede através de VLANs, permitindo isolamento entre ambientes (Administração, Servidores e Laboratório).
+
+---
+
 ##  Configurações realizadas
 
-### 1) Criação da Bridge
+### 3.2.1) Criação da Bridge
+
+* Caminho: **Bridge → Bridge → +**
 
 ```
-BRIDGE-ATTALUS
+NOME: BRIDGE-ATTALUS
 ```
 
 Função:
@@ -223,14 +231,34 @@ Função:
 
 ---
 
-### 2) Associação da porta à Bridge
+## ✅ Resultados obtidos:
+
+* Bridge criada com sucesso
+* Estrutura preparada para segmentação por VLANs
+* Base para implementação de VLAN Filtering
+
+---
+  
+### 3.2.2) Associação da porta à Bridge
+
+* Caminho: **Bridge → Ports → +**
 
 * Interface: ATTALUS-LAN
 * Bridge: BRIDGE-ATTALUS
 
 ---
 
-### 3) Implementação de VLANs
+## ✅ Resultados obtidos:
+
+* Interface física integrada à bridge
+* Tráfego passando pelo switch virtual
+* Porta pronta para receber VLANs
+
+---
+
+### 3.2.3) Implementação de VLANs
+
+* Caminho: **Interfaces → VLAN → +**
 
 | VLAN | Nome        | Função        |
 | ---- | ----------- | ------------- |
@@ -240,16 +268,28 @@ Função:
 
 ---
 
-### 4) Interface VLAN
+## ✅ Resultados obtidos:
 
-* VLAN10-MGMT criada sobre a BRIDGE-ATTALUS
+* VLANs criadas com sucesso
+* Interfaces lógicas disponiveis para segmentação
+* Separação inicial de dominíos de broadcast
 
 ---
 
-### 5) Endereçamento IP
+### 3.2.4) Interface VLAN
+
+* VLANs criadas sobre a interface BRIDGE-ATTALUS
+
+---
+
+### 3.2.5) Endereçamento IP
+
+* Caminho: **IP → Address → +**
 
 ```
 10.10.10.1/24 → VLAN10-MGMT
+10.10.20.1/24 → VLAN20-SERV
+10.10.30.1/24 → VLAN30-LAB
 ```
 
 Boas práticas:
@@ -259,7 +299,15 @@ Boas práticas:
 
 ---
 
-### 6) Porta de acesso
+## ✅ Resultados obtidos:
+
+* Gateways definidos para cada VLAN
+* Segmentação lógica funcional
+* Preparação para roteamento entre VLANs
+
+---
+
+### 3.2.6) Porta de acesso
 
 Interface: ATTALUS-LAN
 
@@ -273,9 +321,16 @@ Função:
 
 ---
 
-### 7) Tabela de VLANs
+## ✅ Resultados obtidos:
 
-**VLAN 10**
+* Dispositivos conectados recebem VLAN padrão (MGMT)
+* Comunicação funcional sem necessidade de VLAN tagging no cliente
+
+---
+
+### 3.2.7) Tabela de VLANs
+
+**VLAN 10(MGMT)**
 
 * Tagged: BRIDGE-ATTALUS
 * Untagged: ATTALUS-LAN
@@ -287,27 +342,61 @@ Função:
 
 ---
 
-### 8) DHCP Server
+## ✅ Resultados obtidos:
 
-* Interface: VLAN10-MGMT
-* Faixa: 10.10.10.x
+* VLAN 10 operacional para dispositivos finais
+* VLANs 20 e 30 preparadas para expansão
 
 ---
 
-### 9) NAT
+### 3.2.8) DHCP Server
+
+* Caminho: **DHCP Server → DHCP Setup**
 
 ```
-Chain: srcnat  
-Out Interface: WAN  
-Action: masquerade  
+Interface: VLAN10-MGMT
+Faixa: 10.10.10.10 - 10.10.10.254 (Primeiras faixas reservadas para uso futuro)
 ```
+
+```
+Interface: VLAN20-SERV
+Faixa: 10.10.20.10 - 10.10.20.254 (Primeiras faixas reservadas para uso futuro)
+```
+
+```
+Interface: VLAN30-LAB
+Faixa: 10.10.30.10 - 10.10.30.254 (Primeiras faixas reservadas para uso futuro)
+```
+
+---
+
+## ✅ Resultados obtidos:
+
+* VLAN10: IP distribuído corretamente
+* VLAN20: DHCP ativo (aguardando uso)
+* VLAN30: DHCP ativo (aguardando uso)
+
+---
+
+## 3.2.9) AJUSTE NAT
+
+* Regra já existente mantida
+* Nenhuma alteração necessária
+
+---
+
+## ✅ Resultados obtidos:
+
+* Comunicação com internet preservada
+* Tradução de endereços funcionando corretamente
+* VCompatibilidade com múltiplas VLANs
 
 ---
 
 ## 🔄 Fluxo de Rede
 
 ```
-Notebook
+Dispositivo
    ↓
 ATTALUS-LAN
    ↓
@@ -315,7 +404,7 @@ BRIDGE-ATTALUS
    ↓
 VLAN 10
    ↓
-VLAN10-MGMT
+GATEWAY (10.10.10.1)
    ↓
 NAT
    ↓
@@ -330,36 +419,62 @@ Internet
 
 **Sintoma:**
 
-* IP funcionando
-* Sem internet com VLAN Filtering ativo
+* Dispositivo recebia ip corretamente
+* Sem internet ao ativar VLAN Filtering
 
 **Causa:**
 
-* IP duplicado entre:
+* IP duplicado entre as interfaces:
 
   * ATTALUS-LAN
   * VLAN10-MGMT
+ 
+**Contexto do problema:**
+ 
+ * Na primeira etapa de configuração (3.1), a rede ATTALUS-LAN operava como uma rede única, utilizando a faixa de IP 10.10.10.0/24.
+   Durante a evolução da infraestrutura na etapa 3.2, esse mesma faixa de IP foi atribuida à interface VLAN10-MGMT,
+   as duas interfaces estavam operando na mesma faixa de IP, o que levou ao problema em questão.
+
+**Impacto:**
+
+* Duas interfaces operando na mesma sub-rede
+* Conflito de roteamento e inconsistencia no encaminhamento de pacotes
+* Interrupção da conectividade com a internet ao ativar a VLAN Filtering
 
 **Correção:**
 
-* Remoção do IP da interface física
-* IP mantido apenas na VLAN
+* Remoção do IP da interface física ATTALUS-LAN
+* IP mantido apenas na VLAN10-MGMT
+
+---
+
+## ✅ Resultados obtidos:
+
+* Conflito de endereçamento eliminado
+* Acesso à internet restabelecido
+* VLAN Filtering operando corretamente
+* Arquitetura alinhada com boas práticas de redes
 
 ---
 
 ##  Conceitos consolidados
 
-**Bridge**
-
-* Switch virtual
-
 **VLAN**
 
-* Segmentação lógica
+* Segmentação lógica da rede
+
+**VLAN Filtering**
+
+* Funciona verificando o ID da VLAN (VID) nos pacotes.
+  Se a VLAN não estiver na "lista permitida"(allowed list) de uma porta trunk ou access o tráfego é bloqueado.
+
+**Bridge**
+
+* Switch virtual responsável pela comutação interna
 
 **PVID**
 
-* VLAN padrão da porta
+* VLAN padrão atribuida a tráfego sem tag
 
 **Tagged vs Untagged**
 
@@ -385,5 +500,6 @@ IP deve estar na VLAN, nunca na interface física
 Planejamento:
 
 * Testar isolamento entre VLANs
-* Criar regras de firewall
+* Criar regras de firewall entre as VLANs
 * Inserir dispositivos nas VLANs 20 e 30
+* Cria políticas de acesso (ex: MGMT → SERV permitido, LAB restrito)
