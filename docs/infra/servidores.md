@@ -13,7 +13,7 @@ Este documento descreve a infraestrutura de servidores do ATTALUS, incluindo har
 - Servidor DNS interno
 - Servidor de autenticação (futuro)
 
-## Próximos passos
+## Próximos Passos
 - Definir arquitetura final de virtualização.
 - Mapear requisitos de hardware.
 - Configurar rede interna dos hosts.
