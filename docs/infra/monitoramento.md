@@ -11,7 +11,7 @@ O monitoramento visa garantir visibilidade total da rede e dos serviços em oper
 - Latência entre VLANs
 - Serviços críticos (DNS, DHCP, VPN)
 
-## Próximos passos
+## Próximos Passos
 - Escolher ferramenta.
 - Definir mapa de hosts.
 - Criar painel inicial.
