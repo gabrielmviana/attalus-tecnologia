@@ -11,7 +11,7 @@ A virtualização será o núcleo do laboratório ATTALUS, permitindo a criaçã
 - Facilitar snapshots e rollback.
 - Criar topologias para estudo de redes e infraestrutura.
 
-## Próximos passos
+## Próximos Passos
 - Documentar VMs iniciais.
 - Definir templates base (Linux/Windows).
 - Planejar migração para Proxmox.
