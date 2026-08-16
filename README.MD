@@ -42,29 +42,32 @@ Todo o ambiente é documentado e versionado seguindo padrões profissionais.
 
 # 📚 Estrutura do Repositório
 
-```
-docs/           → Documentação técnica completa
-infra/          → Configurações e arquivos da infraestrutura
-homelab/        → Organização prática do laboratório local
-projetos/       → Subprojetos, automações, ferramentas
-assets/         → Logos, diagramas e arquivos visuais
-```
-
-
+    assets/                    → Logos, diagramas e arquivos visuais
+    docs/
+      jornada/                 → Documentação numerada (00-07): histórico e decisões do projeto
+      referencia/
+        infra/                 → Infraestrutura: servidores, monitoramento, virtualização
+        rede/                  → Documentação de rede
+        operacoes/              → Documentação operacional
+        seguranca/               → Documentação de segurança
+    infra/
+      mikrotik/backups/         → Backups de configuração (.rsc) do Mikrotik
+    LICENSE
+    README.MD
 ---
 
 # 🗂 Documentação Principal
 
 A documentação central está organizada de forma sequencial:
 
-- [00 — Visão Geral](docs/00-visao-geral.md)  
-- [01 — Planejamento e Fases](docs/01-planejamento.md)  
-- [02 — Topologia da Rede](docs/02-topologia.md)  
-- [03 — Configurações](docs/03-configuracoes.md)  
-- [04 — Segurança](docs/04-seguranca.md)  
-- [05 — Monitoramento](docs/05-monitoramento.md)  
-- [06 — Políticas](docs/06-politicas.md)  
-- [07 — Melhorias / Roadmap](docs/07-melhorias.md)  
+- [00 — Visão Geral](https://github.com/gabrielmviana/attalus-tecnologia/blob/main/docs/jornada/00-visao-geral.md)
+- [01 — Planejamento e Fases](https://github.com/gabrielmviana/attalus-tecnologia/blob/main/docs/jornada/01-planejamento.md)
+- [02 — Topologia da Rede](https://github.com/gabrielmviana/attalus-tecnologia/blob/main/docs/jornada/02-topologia.md)
+- [03 — Configurações](https://github.com/gabrielmviana/attalus-tecnologia/blob/main/docs/jornada/03-configuracoes.md)
+- [04 — Segurança](https://github.com/gabrielmviana/attalus-tecnologia/blob/main/docs/jornada/04-seguranca.md)
+- [05 — Monitoramento](https://github.com/gabrielmviana/attalus-tecnologia/blob/main/docs/jornada/05-monitoramento.md)
+- [06 — Políticas](https://github.com/gabrielmviana/attalus-tecnologia/blob/main/docs/jornada/06-politicas.md)
+- [07 — Melhorias / Roadmap](https://github.com/gabrielmviana/attalus-tecnologia/blob/main/docs/jornada/07-melhorias.md)
 
 ---
 
