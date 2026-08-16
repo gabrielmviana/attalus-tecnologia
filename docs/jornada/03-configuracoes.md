@@ -537,10 +537,10 @@ desde a 3.2 existiam só logicamente.
 
 * Comando utilizado:
 
-'''routeros
+```routeros
 /interface bridge port add bridge=BRIDGE-ATTALUS interface=ether3
 /interface bridge port add bridge=BRIDGE-ATTALUS interface=ether4
-'''
+```
 ---
 
 ## ✅ Resultados obtidos:
@@ -554,10 +554,10 @@ desde a 3.2 existiam só logicamente.
 
 * Comando utilizado:
 
-'''routeros
+```routeros
 /interface bridge port set [find interface=ether3] pvid=20
 /interface bridge port set [find interface=ether4] pvid=30
-'''
+```
 
 * Função:
 
