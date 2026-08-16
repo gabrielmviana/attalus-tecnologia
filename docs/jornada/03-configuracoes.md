@@ -503,3 +503,134 @@ Planejamento:
 * Criar regras de firewall entre as VLANs
 * Inserir dispositivos nas VLANs 20 e 30
 * Cria políticas de acesso (ex: MGMT → SERV permitido, LAB restrito)
+
+
+---
+
+
+# 3.3 — Segmentação Avançada: Portas Físicas para VLANs
+
+**Data:** 16/08/2026
+**Equipamento:** MikroTik RB750Gr3
+
+---
+
+## Objetivo desta etapa
+
+Dar conectividade física real às VLANs 20 e 30, que
+desde a 3.2 existiam só logicamente.
+
+---
+
+## Configurações realizadas
+
+### 3.3.1) Escolha das portas físicas
+
+* Sem switch gerenciável disponível no momento, optou-se por usar
+  portas access dedicadas do próprio MikroTik
+* ether3 → VLAN20-SERV
+* ether4 → VLAN30-LAB
+
+---
+
+### 3.3.2) Associação das portas à Bridge
+
+* Comando utilizado:
+
+\'\'\'
+/interface bridge port add bridge=BRIDGE-ATTALUS interface=ether3
+/interface bridge port add bridge=BRIDGE-ATTALUS interface=ether4
+\'\'\'
+
+---
+
+## ✅ Resultados obtidos:
+* Interfaces ether3 e ether4 integradas à bridge BRIDGE-ATTALUS
+* Portas prontas para receber configuração de VLAN (PVID e Tabela)
+* Nenhuma segmentação aplicada ainda nesta etapa
+
+---
+
+### 3.3.3) Definição de PVID por porta
+
+* Comando utilizado:
+
+\'\'\'
+/interface bridge port set [find interface=ether3] pvid=20
+/interface bridge port set [find interface=ether4] pvid=30
+\'\'\'
+
+* Função:
+
+    * Tráfego sem tag entrando em ether3 é tratado como VLAN20
+    * Tráfego sem tag entrando em ether4 é tratado como VLAN30
+
+---
+
+## ✅ Resultados obtidos:
+* ether3 configurada com PVID 20
+* ether4 configurada com PVID 30
+* Portas prontas para receber dispositivos finais sem necessidade
+  de configuração de VLAN no cliente
+
+---
+
+### 3.3.4) Registro na Tabela de VLANs
+
+**VLAN20**
+
+* Untagged=ether3
+
+**VLAN30**
+
+* Untagged=ether4
+
+---
+
+## ✅ Resultados obtidos:
+* Todo tráfego que entrar sem tag na interface ether3 será direcionada a VLAN20
+* Todo tráfego que entrar sem tag na interface ether4 será direcionado a VLAN30
+
+---
+
+## 🚨 Problema encontrado
+
+**Sintoma:**
+* Comando `/interface bridge vlan add ... vlan-ids=20/30` retornou
+  erro "vlan already added"
+
+**Causa:**
+* a entrada da VLAN já existia desde a 3.2, só sem porta
+  untagged associada.
+
+**Correção:**
+* Uso de `/interface bridge vlan set [find vlan-ids=X] untagged=etherY`
+  em vez de `add`
+
+---
+
+## ✅ Resultados obtidos (testes físicos):
+
+* VLAN20 (ether3): dispositivo recebeu IP 10.10.20.254 via DHCP
+* VLAN30 (ether4): dispositivo recebeu IP 10.10.30.253 via DHCP
+
+---
+
+## Conceitos consolidados
+
+**Access port**
+* Conecta dispositivos finais,como PCs e transmite dados de uma única VLAN, sem etiquetas de identificação.
+
+**Trunk port**
+* Conecta equipamentos de rede, como switches, carregando dados de multiplas VLANS usando etiquetas para organizar.
+
+---
+
+## Próxima etapa
+
+**3.4 — Firewall entre VLANs**
+
+Planejamento:
+* Testar isolamento entre VLANs (hoje, sem firewall, tráfego passa livre)
+* Criar regras de firewall entre as VLANs
+* Criar políticas de acesso (ex: MGMT → SERV permitido, LAB restrito)
