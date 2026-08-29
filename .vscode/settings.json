@@ -1,0 +1,11 @@
+{
+  "editor.formatOnSave": true,
+  "editor.rulers": [79, 100],
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "python.terminal.activateEnvironment": true,
+  "[terraform]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true
+  }
+}
